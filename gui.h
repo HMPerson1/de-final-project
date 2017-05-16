@@ -6,7 +6,7 @@
 namespace toasting::gui {
 
   void guiTick();
-  void changeScreen(GuiScreen& newScreen);
+  void changeScreen(Screen& newScreen);
 
 }
 

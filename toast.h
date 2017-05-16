@@ -10,11 +10,32 @@ namespace toasting::toast {
   struct Toast {
     uint16_t time;
     const char* name;
+    void (&render)(int16_t,int16_t);
   };
+
+  void renderBread(int16_t x,int16_t y);
+  void renderBagel(int16_t x,int16_t y);
 
   constexpr
   std_array<std_array<Toast, 2>, 1> toasts
-  { Toast{20, "Bread"}, Toast{20, "Bagel"} };
+  { Toast{20, "Bread", renderBread}, Toast{15, "Bagel", renderBagel} };
+
+  enum class ToasterWattage : uint8_t {
+    k0800 = 0,
+    k1100 = 1,
+    k1500 = 2,
+  };
+
+  extern ToasterWattage curWattage;
+
+  constexpr uint16_t conversion[3] = {1200, 1000, 800};
+  constexpr uint16_t convert(ToasterWattage w)
+  { return conversion[static_cast<uint8_t>(w)]; }
+
+  void setup();
+  void saveWattage();
+  void startToaster();
+  void stopToaster();
 
 }
 

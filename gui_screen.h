@@ -5,38 +5,47 @@
 
 #include "std_array.h"
 
-#include "gui_button.h"
+#include "gui_widget.h"
 #include "touch.h"
 #include "display.h"
 
 namespace toasting::gui {
 
-  class GuiScreen {
+  class Screen {
   public:
-    virtual void dispatchTouch(touch::TouchEvent) = 0;
     virtual void doStart() = 0;
+    virtual void dispatchTouch(touch::Event const&) = 0;
+    virtual void dispatchRender() = 0;
   };
 
-  template<size_t BtnCnt>
-  class AbstractGuiScreen : public GuiScreen {
+  template<size_t WgtCnt>
+  class AbstractScreen : public Screen {
   protected:
-    std_array<GuiButton*, BtnCnt> buttons;
+    std_array<Widget*, WgtCnt> const widgets;
 
     constexpr
-    AbstractGuiScreen(std_array<GuiButton*, BtnCnt> buttons)
-    : buttons{buttons}
+    AbstractScreen(std_array<Widget*, WgtCnt> widgets)
+    : widgets{widgets}
     {}
 
   public:
-    void dispatchTouch(touch::TouchEvent te) override {
-      for (auto btn : buttons) {
-        btn->dispatchTouch(te);
+    void doStart() override
+    {
+      display::Display.fillScreen(0x0000);
+      for (auto const& wgt : widgets) {
+        wgt->invalidate();
       }
     }
-    void doStart() override {
-      display::Display.fillScreen(0x0000);
-      for (auto btn : buttons) {
-        btn->doRender();
+    void dispatchTouch(touch::Event const& te) override
+    {
+      for (auto const& wgt : widgets) {
+        wgt->dispatchTouch(te);
+      }
+    }
+    void dispatchRender() override
+    {
+      for (auto const& wgt : widgets) {
+        wgt->dispatchRender();
       }
     }
   };

@@ -3,32 +3,39 @@
 #include "toast.h"
 #include "display.h"
 #include "gui.h"
-#include "gui_cancel.h"
+#include "gui_toasting.h"
+#include "gui_config.h"
 
 namespace toasting::gui {
 
   using display::Display;
+  using display::Alignment;
 
-  void ToastButton::doRender() {
-    GuiButton::doRender();
-    Display.startWrite();
-    Display.writeFillRect(x, y, w, 147, 0xF800);
-    Display.writeFastHLine(x, y+147, w, 0xFFFF);
-    Display.endWrite();
-    toastText.render(Display);
+  void ToastButton::doRender()
+  {
+    Button::doRender();
+    toast.render(x,y);
+    Display.drawText(toast.name, x, y+152, 158, 30,
+                     Alignment::kMid, Alignment::kMid, color::kWhite.color);
   }
 
-  void MainScreenClass::onLeftToast() {
-    CancelScreen.setTimeLeft(toast::toasts[0][0].time);
+  void MainScreenClass::onLeftToast()
+  {
+    ToastingScreen.toast = &toast::toasts[0][0];
     onToast();
   }
-  void MainScreenClass::onRightToast() {
-    CancelScreen.setTimeLeft(toast::toasts[0][1].time);
+
+  void MainScreenClass::onRightToast()
+  {
+    ToastingScreen.toast = &toast::toasts[0][1];
     onToast();
   }
-  void MainScreenClass::onToast() {
-    changeScreen(CancelScreen);
-  }
+
+  void MainScreenClass::onToast()
+  { changeScreen(ToastingScreen); }
+
+  void MainScreenClass::onConfig()
+  { changeScreen(ConfigScreen); }
 
   MainScreenClass MainScreen;
 

@@ -3,42 +3,44 @@
 
 #include "toast.h"
 #include "display.h"
-#include "gui_button.h"
+#include "gui_widget.h"
 #include "gui_screen.h"
 
 namespace toasting::gui {
 
-  class ToastButton : public GuiButton {
+  class ToastButton : public Button {
   private:
-    const toast::Toast& toast;
-    const display::TextLabel toastText;
+    toast::Toast const& toast;
 
   protected:
     void doRender() override;
 
   public:
     constexpr
-    ToastButton(const toast::Toast& toast, int16_t x, int16_t y, Callback& onPress)
-    : GuiButton{x,y,158,187,onPress},
-      toast{toast},
-      toastText{x,y+147,158,30,toast.name,display::Alignment::kMid,display::Alignment::kMid,0xF800,0x0000}
+    ToastButton(int16_t x, int16_t y, const toast::Toast& toast, Callback& onPress)
+    : Button{x, y, 158, 187, color::kBlue, onPress},
+      toast{toast}
     {}
   };
 
-  class MainScreenClass : public AbstractGuiScreen<2> {
+  class MainScreenClass : public AbstractScreen<3> {
   private:
     MemberCallback<MainScreenClass> leftCB{*this, &MainScreenClass::onLeftToast};
     MemberCallback<MainScreenClass> rightCB{*this, &MainScreenClass::onRightToast};
-    ToastButton leftToast{toast::toasts[0][0],0,0,leftCB};
-    ToastButton rightToast{toast::toasts[0][1],162,0,rightCB};
+    MemberCallback<MainScreenClass> configCB{*this, &MainScreenClass::onConfig};
+    ToastButton leftToast{0, 0, toast::toasts[0][0], leftCB};
+    ToastButton rightToast{162, 0, toast::toasts[0][1], rightCB};
+    TextButton configBtn{255, 195, 60, 40, color::kBlue, configCB, "Config", color::kWhite};
+
     void onLeftToast();
     void onRightToast();
     void onToast();
+    void onConfig();
 
   public:
     constexpr
     MainScreenClass()
-      : AbstractGuiScreen{std_array<GuiButton*, 2>{&leftToast, &rightToast}}
+    : AbstractScreen{std_array<Widget*, 3>{&leftToast, &rightToast, &configBtn}}
     {}
   };
 

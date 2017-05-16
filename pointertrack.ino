@@ -9,11 +9,13 @@
 #include "display.h"
 #include "gui.h"
 #include "touch.h"
+#include "toast.h"
 
 using namespace toasting;
 
 void setup() {
   // Serial.begin(9600);
+  toast::setup();
   touch::setup();
   display::setup();
 }
