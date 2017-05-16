@@ -56,7 +56,7 @@ namespace toasting::gui {
         updateTimeLeft((stopTime - curTime)/1000);
       }
     } else {
-      updateTimeLeft((toast->time* toast::convert(toast::curWattage))/1000);
+      updateTimeLeft((toast->time * toast::convert(toast::curWattage))/1000);
     }
   }
   void ToastingScreenClass::updateTimeLeft(uint16_t timeLeft)
