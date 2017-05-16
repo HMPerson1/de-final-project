@@ -18,7 +18,7 @@ namespace toasting::toast {
 
   constexpr
   std_array<std_array<Toast, 2>, 1> toasts
-  { Toast{20, "Bread", renderBread}, Toast{15, "Bagel", renderBagel} };
+  { Toast{90, "Bread", renderBread}, Toast{150, "Bagel", renderBagel} };
 
   enum class ToasterWattage : uint8_t {
     k0800 = 0,
@@ -28,7 +28,7 @@ namespace toasting::toast {
 
   extern ToasterWattage curWattage;
 
-  constexpr uint16_t conversion[3] = {1200, 1000, 800};
+  constexpr uint16_t conversion[3] = {1400, 1200, 1000};
   constexpr uint16_t convert(ToasterWattage w)
   { return conversion[static_cast<uint8_t>(w)]; }
 
